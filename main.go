@@ -40,6 +40,11 @@ func main() {
 		handlers.RegisterHandler(db, msg.Topic(), string(msg.Payload()))
 	})
 
+	client.Subscribe("data", 0, func(client mqtt.Client, msg mqtt.Message) {
+		log.Printf("Received message: %s from topic: %s", msg.Payload(), msg.Topic())
+		handlers.DataHandler(db, msg.Topic(), string(msg.Payload()))
+	})
+
 	select {}
 
 }

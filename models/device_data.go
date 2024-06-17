@@ -7,11 +7,11 @@ import (
 )
 
 type DeviceData struct {
-	DevicesDataID uuid.UUID `gorm:"primaryKey"`
-	SerialNumber  string
-	Status        enums.EStatus 
-	SoilMoisture  int
-	Date          time.Time
+	DevicesDataID uuid.UUID     `gorm:"column:DeviceDataId;primaryKey"`
+	SerialNumber  string        `gorm:"column:SerialNumber"`
+	Status        enums.EStatus `gorm:"column:Status"`
+	SoilMoisture  int           `gorm:"column:SoilMoisture"`
+	Date          time.Time     `gorm:"column:Date"`
 }
 
 func (DeviceData) TableName() string {
