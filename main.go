@@ -9,6 +9,7 @@ import (
 	"log"
 	"mqttbridge/handlers"
 	"mqttbridge/utils"
+	"regexp"
 )
 
 func main() {
@@ -35,16 +36,22 @@ func main() {
 		log.Fatalf("Failed to connect to the MQTT broker: %v", token.Error())
 	}
 
+	regex := regexp.MustCompile(`ERROR|OK`)
 	client.Subscribe("register", 0, func(client mqtt.Client, msg mqtt.Message) {
 		log.Printf("Received message: %s from topic: %s", msg.Payload(), msg.Topic())
-		handlers.RegisterHandler(db, msg.Topic(), string(msg.Payload()))
+		message := string(msg.Payload())
+		if !regex.MatchString(message) {
+			result := handlers.RegisterHandler(db, msg.Topic(), message)
+			client.Publish(msg.Topic(), 0, false, result)
+		}
 	})
-
 	client.Subscribe("data", 0, func(client mqtt.Client, msg mqtt.Message) {
 		log.Printf("Received message: %s from topic: %s", msg.Payload(), msg.Topic())
-		handlers.DataHandler(db, msg.Topic(), string(msg.Payload()))
+		message := string(msg.Payload())
+		if !regex.MatchString(message) {
+			result := handlers.DataHandler(db, msg.Topic(), message)
+			client.Publish(msg.Topic(), 0, false, result)
+		}
 	})
-
 	select {}
-
 }
