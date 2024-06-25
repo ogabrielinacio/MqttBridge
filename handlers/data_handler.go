@@ -6,8 +6,8 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"log"
-	enums "mqttbridge/enums"
 	"mqttbridge/models"
+	"mqttbridge/utils"
 	"mqttbridge/viewModels"
 	"time"
 )
@@ -28,7 +28,7 @@ func DataHandler(db *gorm.DB, topic string, msg string) string {
 		return fmt.Sprintf("ERROR: Serial number not found in Devices table")
 	}
 
-	if !isValidStatus(newData.Status) {
+	if !utils.IsValidStatus(newData.Status) {
 		log.Printf("Invalid status: %v", newData.Status)
 		return fmt.Sprintf("ERROR: Invalid status")
 	}
@@ -49,13 +49,4 @@ func DataHandler(db *gorm.DB, topic string, msg string) string {
 
 	log.Printf("New device registered: %+v", newData)
 	return fmt.Sprintf("OK: New device registered %+v", newData)
-}
-
-func isValidStatus(status enums.EStatus) bool {
-	switch status {
-	case enums.Online, enums.Offline, enums.SensorError:
-		return true
-	default:
-		return false
-	}
 }
