@@ -35,5 +35,5 @@ func LiveHandler(db *gorm.DB, topic string, msg string, devices []models.Timeout
 			device.Counter = 0
 		}
 	}
-	return "You are a live! :)", devices
+	return "OK: You are a live! :)", devices
 }

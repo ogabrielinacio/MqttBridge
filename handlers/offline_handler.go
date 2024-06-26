@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"log"
 	"mqttbridge/enums"
 	"mqttbridge/models"
@@ -20,7 +21,7 @@ func OfflineHandler(db *gorm.DB, device models.Device) {
 	}
 
 	var deviceData models.DeviceData
-	err := db.Where(&models.DeviceData{SerialNumber: device.SerialNumber}).Order(models.DeviceData{}.Date).First(&deviceData).Error
+	err := db.Where(&models.DeviceData{SerialNumber: device.SerialNumber}).Order(clause.OrderByColumn{Column: clause.Column{Name: "Date"}, Desc: true}).Find(&deviceData).Error
 
 	if err != nil {
 		log.Printf("Error on Query to get device data for device %s: %v", device.SerialNumber, err)

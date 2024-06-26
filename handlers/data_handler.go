@@ -47,6 +47,6 @@ func DataHandler(db *gorm.DB, topic string, msg string) string {
 		return fmt.Sprintf("ERROR: Failed to insert device into the database")
 	}
 
-	log.Printf("New device registered: %+v", newData)
-	return fmt.Sprintf("OK: New device registered %+v", newData)
+	log.Printf("New device data added: %+v", newData)
+	return fmt.Sprintf("OK: New device data added:  %+v", newData)
 }
